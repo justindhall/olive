@@ -90,6 +90,7 @@ my initial thoughts would be:
   would lead to reduced performance at large scale. For a large application, we are probably limited more by cost than
   space as AWS offers cache sizes up to 400GB--probably enough to store weather data for most cities in the world over the
   eviction period.
+* Add production ready docker files and CI scripts. Current files are only suitable for development.
 
 
 ***
