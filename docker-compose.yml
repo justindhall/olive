@@ -1,0 +1,51 @@
+version: '1.0'
+volumes:
+  pgdata:
+  redisdata:
+services:
+  postgres:
+    container_name: olive-postgres
+    image: public.ecr.aws/docker/library/postgres:16.1
+    environment:
+      POSTGRES_USER: postgres
+      PGDATA: /var/lib/postgresql/data/pgdata
+      POSTGRES_HOST_AUTH_METHOD: trust
+    volumes:
+        - pgdata:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+  redis:
+    container_name: olive-redis
+    image: public.ecr.aws/docker/library/redis:7.2.3-alpine
+    environment:
+      ALLOW_EMPTY_PASSWORD: "true"
+    ports:
+      - 6379:6379
+    volumes:
+      - redisdata:/var/lib/redis/data
+  weather-api:
+    container_name: weather-api
+    tty: true
+    stdin_open: true
+    volumes:
+      - ./rails/weather-api/:/app/
+    build:
+      context: ./rails/weather-api/
+      args:
+        RAILS_ENV: development
+        APP_NAME: weather-api
+        RAILS_MASTER_KEY: $RAILS_MASTER_KEY
+    command: ["sh", "./entrypoint.sh"]
+    environment:
+      RAILS_ENV: development
+      POSTGRES_USERNAME: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_HOST: postgres
+      REDIS_URL: 'redis:6379/0'
+    env_file:
+      - ./rails/weather-api/.env
+    ports:
+      - 3000:3000
+    depends_on:
+      - postgres
+      - redis

@@ -1,0 +1,25 @@
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  schema_search_path: "weather_api,public"
+
+development:
+  <<: *default
+  database: weather_api_development
+  host: postgres
+  username: postgres
+  password: postgres
+
+test:
+  <<: *default
+  database: weather_api_test
+  host: postgres
+  username: postgres
+  password: postgres
+
+production:
+  <<: *default
+  database: weather_api_production
+  username: weather_api
+  password: <%= ENV["WEATHER_API_DATABASE_PASSWORD"] %>
