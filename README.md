@@ -17,7 +17,7 @@
 * JSON responses are served at `localhost:3000/weather`
   * `curl -XGET 'localhost:3000/weather?city_name=Arlington&state=Virginia&country_code=US'`
 
-** Testing:**
+**Testing:**
 
 * Exec into a running container with `docker exec -it weather-api sh`
 * Run `bundle exec rspec` to run the entire test suite or `bundle exec rspec filepath` to run a specific test file
